@@ -34,14 +34,34 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Code]
+{procedure BrowseForFolder(var Directory: String);
+begin
+  Log('yay');
+end;}
+var
+ Fol: string;
+ Edit: TEdit;
+procedure SelectDir(Sender: TObject);
+var
+  Dir: string;
+begin
+  //Dir := TEdit;
+  //Dir := Page.Values[0];
+  if BrowseForFolder(SetupMessage(msgBrowseDialogLabel), Dir, True) then
+  begin
+    Edit.Text := Dir
+  end;
+  //Edit.Text := AddBackslash(Dir);
+end;
 procedure MyCustomPage;
 var
  V: string;
+ //Dir: string;
  Page: TWizardPage;
  //CheckBox: TCheckBox;
  Button, FormButton: TButton;
  CheckBox: TNewCheckBox;
- Edit: TEdit;
+ //Edit: TEdit;
  PasswordEdit: TPasswordEdit;
  Memo: TMemo;
  Lbl, ProgressBarLabel: TLabel;
@@ -55,7 +75,7 @@ var
  BitmapFileName: String;
  RichEditViewer: TRichEditViewer;
 begin
-   Page := CreateCustomPage(wpLicense, 'Step 1', 'In order to install the content, game folder must be provided');
+  Page := CreateCustomPage(wpLicense, 'Step 1', 'In order to install the content, game folder must be provided');
 
   CheckListBox2 := TNewCheckListBox.Create(Page);
   //CheckListBox2.Top := CheckListBox.Top + CheckListBox.Height + ScaleY(8);
@@ -77,7 +97,7 @@ begin
   Edit.Top := CheckListBox2.Top + ScaleY(48);// + CheckListBox2.Height;// + ScaleY(8);
   Edit.Width := Page.SurfaceWidth div 2;
   //Edit.Anchors := [akLeft, akRight, akBottom];
-  //Edit.Text := 'TNewEdit';
+  Edit.Text := Fol;
   //Edit.Parent := Page.Surface;
   Edit.Parent := CheckListBox2;
 
@@ -87,7 +107,7 @@ begin
   Button.Left := Page.SurfaceWidth - Edit.Width + ScaleX(24)
   Button.Width := WizardForm.CalculateButtonWidth([Button.Caption]);
   Button.Height := ScaleY(23);
-  //Button.OnClick := @ButtonOnClick;
+  Button.OnClick := @SelectDir;
   Button.Parent := Page.Surface;
 end;
   {//Result := True;
