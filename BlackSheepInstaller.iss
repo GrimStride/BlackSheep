@@ -80,6 +80,15 @@ begin
   //Edit.Text := 'TNewEdit';
   //Edit.Parent := Page.Surface;
   Edit.Parent := CheckListBox2;
+
+  Button := TNewButton.Create(Page);
+  Button.Caption := 'Browse...';
+  Button.Top := Edit.Top - 1
+  Button.Left := Page.SurfaceWidth - Edit.Width + ScaleX(24)
+  Button.Width := WizardForm.CalculateButtonWidth([Button.Caption]);
+  Button.Height := ScaleY(23);
+  //Button.OnClick := @ButtonOnClick;
+  Button.Parent := Page.Surface;
 end;
   {//Result := True;
   if not RegKeyExists(HKCU, 'SOFTWARE\Valve\Steam') then
