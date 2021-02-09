@@ -26,23 +26,58 @@ OutputBaseFilename=BlackSheepTexMod
 Compression=lzma
 SolidCompression=yes
 Uninstallable=no
-PrivilegesRequired=none
+PrivilegesRequired=lowest
+UsePreviousPrivileges=False
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Code]
-function InitializeSetup: Boolean;
+procedure MyCustomPage;
 var
  V: string;
+ Page: TWizardPage;
+ //CheckBox: TCheckBox;
+ Button, FormButton: TButton;
+ CheckBox: TNewCheckBox;
+ Edit: TEdit;
+ PasswordEdit: TPasswordEdit;
+ Memo: TMemo;
+ Lbl, ProgressBarLabel: TLabel;
+ ComboBox: TNewComboBox;
+ ListBox: TListBox;
+ StaticText: TNewStaticText;
+ ProgressBar: TNewProgressBar;
+ CheckListBox, CheckListBox2: TNewCheckListBox;
+ FolderTreeView: TFolderTreeView;
+ BitmapImage, BitmapImage2, BitmapImage3: TBitmapImage;
+ BitmapFileName: String;
+ RichEditViewer: TRichEditViewer;
 begin
-  // allow the setup to continue initially
-  Result := True;
+   Page := CreateCustomPage(wpLicense, 'Step 1', 'In order to install the content, game folder must be provided');
+
+  CheckListBox2 := TNewCheckListBox.Create(Page);
+  //CheckListBox2.Top := CheckListBox.Top + CheckListBox.Height + ScaleY(8);
+  CheckListBox2.Width := Page.SurfaceWidth;
+  CheckListBox2.Height := ScaleY(97);
+  CheckListBox2.Anchors := [akLeft, akRight, akBottom];
+  CheckListBox2.BorderStyle := bsNone;
+  CheckListBox2.ParentColor := True;
+  CheckListBox2.MinItemHeight := WizardForm.TasksList.MinItemHeight;
+  CheckListBox2.ShowLines := False;
+  CheckListBox2.WantTabs := True;
+  CheckListBox2.Parent := Page.Surface;
+  //CheckListBox2.AddGroup('TNewCheckListBox', '', 0, nil);
+  CheckListBox2.AddRadioButton('Detect game folder automatically', '', 0, True, True, nil);
+  CheckListBox2.AddRadioButton('Insert game folder manually', '', 0, False, True, nil);
+
+end;
+  {//Result := True;
   if not RegKeyExists(HKCU, 'SOFTWARE\Valve\Steam') then
   begin
     // return False to prevent installation to continue
-    Result := False;
+    //Result := False;
     Log('haha xd');
     // and display a message box
     MsgBox('please install ABC first!!', mbError, MB_OK);
@@ -50,5 +85,10 @@ begin
    Log('yeah it is installed')
    RegQueryStringValue(HKCU, 'SOFTWARE\Valve\Steam', 'SteamPath', V)
    Log(V)
-  end;
+  end;}
+//end;
+
+procedure InitializeWizard();
+begin
+  MyCustomPage;
 end;
