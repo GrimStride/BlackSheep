@@ -72,6 +72,14 @@ begin
   CheckListBox2.AddRadioButton('Detect game folder automatically', '', 0, True, True, nil);
   CheckListBox2.AddRadioButton('Insert game folder manually', '', 0, False, True, nil);
 
+  Edit := TNewEdit.Create(Page);
+  Edit.Left := ScaleX(20);
+  Edit.Top := CheckListBox2.Top + ScaleY(48);// + CheckListBox2.Height;// + ScaleY(8);
+  Edit.Width := Page.SurfaceWidth div 2;
+  //Edit.Anchors := [akLeft, akRight, akBottom];
+  //Edit.Text := 'TNewEdit';
+  //Edit.Parent := Page.Surface;
+  Edit.Parent := CheckListBox2;
 end;
   {//Result := True;
   if not RegKeyExists(HKCU, 'SOFTWARE\Valve\Steam') then
