@@ -39,8 +39,29 @@ begin
   Log('yay');
 end;}
 var
+ //Page: TWizardPage;
  Fol: string;
  Edit: TEdit;
+ RadioButton, RadioButton2: TNewRadioButton;
+ Button, FormButton: TButton;
+ Manual: Boolean;
+
+procedure CheckRadio(Sender: TObject);
+begin
+  if RadioButton.Checked = True then
+  begin
+    //Edit.ReadOnly := True;
+    Edit.Enabled := False;
+    Button.Enabled := False;
+    //Edit.ParentColor := True;
+  end else begin
+    //Edit.ReadOnly := False;
+    Edit.Enabled := True;
+    Button.Enabled := True;
+    //Edit.ParentColor := False;
+    //Edit.Color := clWhite
+  end;
+end;
 procedure SelectDir(Sender: TObject);
 var
   Dir: string;
@@ -59,7 +80,7 @@ var
  //Dir: string;
  Page: TWizardPage;
  //CheckBox: TCheckBox;
- Button, FormButton: TButton;
+ //Button, FormButton: TButton;
  CheckBox: TNewCheckBox;
  //Edit: TEdit;
  PasswordEdit: TPasswordEdit;
@@ -77,7 +98,7 @@ var
 begin
   Page := CreateCustomPage(wpLicense, 'Step 1', 'In order to install the content, game folder must be provided');
 
-  CheckListBox2 := TNewCheckListBox.Create(Page);
+  {CheckListBox2 := TNewCheckListBox.Create(Page);
   //CheckListBox2.Top := CheckListBox.Top + CheckListBox.Height + ScaleY(8);
   CheckListBox2.Width := Page.SurfaceWidth;
   CheckListBox2.Height := ScaleY(97);
@@ -91,23 +112,48 @@ begin
   //CheckListBox2.AddGroup('TNewCheckListBox', '', 0, nil);
   CheckListBox2.AddRadioButton('Detect game folder automatically', '', 0, True, True, nil);
   CheckListBox2.AddRadioButton('Insert game folder manually', '', 0, False, True, nil);
+   }
+  RadioButton := TNewRadioButton.Create(Page);
+  RadioButton.Parent := Page.Surface
+  RadioButton.Top := ScaleY(8);
+  RadioButton.Width := Page.SurfaceWidth;
+  RadioButton.Left := ScaleX(4)
+  //RadioButton.Height := ScaleY(97);
+  RadioButton.Caption := 'Detect game folder automatically';
+  RadioButton.Checked := True;
+  RadioButton.OnClick := @CheckRadio;
+
+  RadioButton2 := TNewRadioButton.Create(Page);
+  RadioButton2.Parent := Page.Surface
+  RadioButton2.Top := Radiobutton.Top + ScaleY(20);
+  RadioButton2.Width := Page.SurfaceWidth;
+  RadioButton2.Left := ScaleX(4)
+  //RadioButton.Height := ScaleY(97);
+  RadioButton2.Caption := 'Insert game folder manually';
+  RadioButton2.OnClick := @CheckRadio;
+  //RadioButton.OnClick := @CheckRadio;
+
 
   Edit := TNewEdit.Create(Page);
   Edit.Left := ScaleX(20);
-  Edit.Top := CheckListBox2.Top + ScaleY(48);// + CheckListBox2.Height;// + ScaleY(8);
-  Edit.Width := Page.SurfaceWidth div 2;
+  Edit.Top := ScaleY(50);// + CheckListBox2.Height;// + ScaleY(8);
+  Edit.Width := Page.SurfaceWidth div 2 + ScaleX(64);
   //Edit.Anchors := [akLeft, akRight, akBottom];
   Edit.Text := Fol;
-  //Edit.Parent := Page.Surface;
-  Edit.Parent := CheckListBox2;
+  Edit.Parent := Page.Surface;
+  Edit.Enabled := False;
+  //Edit.ReadOnly := True;
+  //Edit.ParentColor := True;
+  //Edit.Parent := CheckListBox2;
 
   Button := TNewButton.Create(Page);
   Button.Caption := 'Browse...';
   Button.Top := Edit.Top - 1
-  Button.Left := Page.SurfaceWidth - Edit.Width + ScaleX(24)
+  Button.Left := Edit.Width + ScaleX(24)
   Button.Width := WizardForm.CalculateButtonWidth([Button.Caption]);
   Button.Height := ScaleY(23);
   Button.OnClick := @SelectDir;
+  Button.Enabled := False;
   Button.Parent := Page.Surface;
 end;
   {//Result := True;
