@@ -28,6 +28,8 @@ SolidCompression=yes
 Uninstallable=no
 PrivilegesRequired=lowest
 UsePreviousPrivileges=False
+DisableWelcomePage=False
+DisableReadyPage=True
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -39,12 +41,11 @@ begin
   Log('yay');
 end;}
 var
- //Page: TWizardPage;
+ Page, Page2: TWizardPage;
  Fol: string;
  Edit: TEdit;
  RadioButton, RadioButton2: TNewRadioButton;
  Button, FormButton: TButton;
- Manual: Boolean;
 
 procedure CheckRadio(Sender: TObject);
 begin
@@ -74,11 +75,50 @@ begin
   end;
   //Edit.Text := AddBackslash(Dir);
 end;
+
+{function VerifyPath(Sender: TWizardPage): Boolean;
+begin
+  if Edit.Enabled = True then
+  begin
+    if FileExists(AddBackslash(Edit.Text) + 'UltimateChickenHorse.exe') = False then
+    begin
+      MsgBox('Error: Invalid game folder path.'+#13#10+'Please make sure to enter the correct game folder path of Ultimate Chicken Horse', mbCriticalError, MB_OK);
+    end else begin
+      //Page.OnNextButtonClick := nil;
+      WizardForm.NextButton.OnClick(nil);
+      Exit;
+    end;
+   end else begin
+     //WizardForm.NextButton.OnClick(nil);
+   end; 
+  end;
+  //Page.OnNextButtonClick := nil;
+end;}
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  if CurPageID = Page.ID then
+    if Edit.Enabled = True then
+    begin
+      if FileExists(AddBackslash(Edit.Text) + 'UltimateChickenHorse.exe') = False then
+      begin
+        MsgBox('Error: Invalid game folder path.'+#13#10+'Please make sure to enter the correct game folder path of Ultimate Chicken Horse', mbCriticalError, MB_OK);
+        Result := False;
+      end else begin
+        Result := True;
+      end;
+    end else begin
+      Result := True;
+    end else begin
+      Result := True
+    end;
+  end; 
+//end; 
 procedure MyCustomPage;
 var
  V: string;
  //Dir: string;
- Page: TWizardPage;
+ //Page: TWizardPage;
  //CheckBox: TCheckBox;
  //Button, FormButton: TButton;
  CheckBox: TNewCheckBox;
@@ -129,7 +169,7 @@ begin
   RadioButton2.Width := Page.SurfaceWidth;
   RadioButton2.Left := ScaleX(4)
   //RadioButton.Height := ScaleY(97);
-  RadioButton2.Caption := 'Insert game folder manually';
+  RadioButton2.Caption := 'Enter game folder manually';
   RadioButton2.OnClick := @CheckRadio;
   //RadioButton.OnClick := @CheckRadio;
 
@@ -155,6 +195,9 @@ begin
   Button.OnClick := @SelectDir;
   Button.Enabled := False;
   Button.Parent := Page.Surface;
+
+  //Page.OnNextButtonClick := @VerifyPath;
+  Page2 := CreateCustomPage(Page.ID, 'Step 2', 'Installing modification');
 end;
   {//Result := True;
   if not RegKeyExists(HKCU, 'SOFTWARE\Valve\Steam') then
