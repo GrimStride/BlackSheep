@@ -46,6 +46,8 @@ var
  Edit: TEdit;
  RadioButton, RadioButton2: TNewRadioButton;
  Button, FormButton: TButton;
+ OutputProgressWizardPage: TOutputProgressWizardPage;
+ OutputProgressWizardPageAfterID: Integer;
 
 procedure CheckRadio(Sender: TObject);
 begin
@@ -76,6 +78,22 @@ begin
   //Edit.Text := AddBackslash(Dir);
 end;
 
+procedure installProg;
+var
+  Position, Max: Integer;
+begin
+try
+      Max := 25;
+      for Position := 0 to Max do begin
+        OutputProgressWizardPage.SetProgress(Position, Max);
+        if Position = 0 then
+          OutputProgressWizardPage.Show;
+        Sleep(2000 div Max);
+      end;
+    finally
+      OutputProgressWizardPage.Hide;
+     end;
+end;
 {function VerifyPath(Sender: TWizardPage): Boolean;
 begin
   if Edit.Enabled = True then
@@ -94,8 +112,26 @@ begin
   end;
   //Page.OnNextButtonClick := nil;
 end;}
+{function CreateOutputProgressPage(const ACaption, ADescription: String): TOutputProgressWizardPage;
+var
+  Position, Max: Integer;
+begin
+  try
+      Max := 25;
+      for Position := 0 to Max do begin
+        OutputProgressWizardPage.SetProgress(Position, Max);
+        if Position = 0 then
+          OutputProgressWizardPage.Show;
+        Sleep(2000 div Max);
+      end;
+    finally
+      OutputProgressWizardPage.Hide;
+    end;
+end;  }
 
 function NextButtonClick(CurPageID: Integer): Boolean;
+{var
+  Position, Max: Integer;}
 begin
   if CurPageID = Page.ID then
     if Edit.Enabled = True then
@@ -104,15 +140,33 @@ begin
       begin
         MsgBox('Error: Invalid game folder path.'+#13#10+'Please make sure to enter the correct game folder path of Ultimate Chicken Horse', mbCriticalError, MB_OK);
         Result := False;
+        Exit;
       end else begin
         Result := True;
+        installProg;
       end;
     end else begin
       Result := True;
+      {try
+      Max := 25;
+      for Position := 0 to Max do begin
+        OutputProgressWizardPage.SetProgress(Position, Max);
+        if Position = 0 then
+          OutputProgressWizardPage.Show;
+        Sleep(2000 div Max);
+      end;
+    finally
+      OutputProgressWizardPage.Hide;
+    end;}
+    installProg;
     end else begin
       Result := True
-    end;
-  end; 
+      end;
+
+  //Page2 := CreateCustomPage(Page.ID, 'Step 2', 'Installing modification');
+  //OutputProgressWizardPage := CreateOutputProgressPage('Step 3', 'Installing modifications');
+  //OutputProgressWizardPage.Show;
+end; 
 //end; 
 procedure MyCustomPage;
 var
@@ -189,7 +243,7 @@ begin
   Button := TNewButton.Create(Page);
   Button.Caption := 'Browse...';
   Button.Top := Edit.Top - 1
-  Button.Left := Edit.Width + ScaleX(24)
+  Button.Left := Edit.Width + ScaleX(30)
   Button.Width := WizardForm.CalculateButtonWidth([Button.Caption]);
   Button.Height := ScaleY(23);
   Button.OnClick := @SelectDir;
@@ -197,7 +251,9 @@ begin
   Button.Parent := Page.Surface;
 
   //Page.OnNextButtonClick := @VerifyPath;
-  Page2 := CreateCustomPage(Page.ID, 'Step 2', 'Installing modification');
+  //Page2 := CreateCustomPage(Page.ID, 'Step 2', 'Installing modification');
+  OutputProgressWizardPage := CreateOutputProgressPage('Step 3', 'Installing modifications');
+  OutputProgressWizardPageAfterID := Page.ID;
 end;
   {//Result := True;
   if not RegKeyExists(HKCU, 'SOFTWARE\Valve\Steam') then
@@ -217,4 +273,5 @@ end;
 procedure InitializeWizard();
 begin
   MyCustomPage;
+  //OutputProgressWizardPage := CreateOutputProgressPage('Step 3', 'Installing modifications');
 end;
